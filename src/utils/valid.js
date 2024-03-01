@@ -37,7 +37,7 @@ const valid = ({fullname, username, email, password, cf_password}) => {
     }
 }
 
-
+// TODO: Validate group
 
 function validateEmail(email) {
     const re = /@stud\.fils\.upb\.ro$/;
