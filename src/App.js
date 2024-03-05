@@ -10,6 +10,17 @@ import {useSelector, useDispatch} from 'react-redux'
 import {refreshToken} from './redux/actions/authActions'
 import Header from './components/header/Header';
 function App() {
+
+  const { darkMode } = useSelector(state => state.theme);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
+
   const{auth} = useSelector(state => state)
   const dispatch = useDispatch()
 

@@ -6,12 +6,14 @@ const Avatar = ({ src, size }) => {
 
     let sizeClass = '';
     if(size === 'large') {
-        sizeClass = 'w-24 h-24'; // large size
+        sizeClass = 'w-24 h-24'; 
     } else if(size === 'medium') {
-        sizeClass = 'w-15 h-15'; // medium size
-    } else {
-        sizeClass = 'w-10 h-10'; // default or small size
-    }
+        sizeClass = 'w-15 h-15'; 
+    } else if (size === 'super_large') {
+        sizeClass = 'w-34 h-34';
+    }else {
+        sizeClass = 'w-10 h-10'; 
+    } 
 
     return (
         <img src={src} alt="avatar" 
