@@ -9,19 +9,12 @@ import Alert from './components/alert/Alert';
 import {useSelector, useDispatch} from 'react-redux'
 import {refreshToken} from './redux/actions/authActions'
 import Header from './components/header/Header';
+import StatusModal from './components/StatusModal';
 function App() {
 
-  const { darkMode } = useSelector(state => state.theme);
+  
 
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }, [darkMode]);
-
-  const{auth} = useSelector(state => state)
+  const{auth, status} = useSelector(state => state)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -38,6 +31,7 @@ function App() {
 
       <div className="main">
         {auth.token && <Header /> }
+        {status && <StatusModal />}
         {/*TODO: Fix login   */}
         <Route exact path="/" component={auth.token ? Home : Login} />
         <Route exact path="/register" component={Register} />

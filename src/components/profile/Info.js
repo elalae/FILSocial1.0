@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Avatar from '../alert/Avatar';
+import { getProfileUsers } from '../../redux/actions/profileAction';
 
 const Info = () => {
   const { id } = useParams();
   const { auth } = useSelector(state => state);
+  const dispatch = useDispatch();
   
   const [user, setUserData] = useState(null);
 
