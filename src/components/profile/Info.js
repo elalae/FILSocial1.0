@@ -6,16 +6,36 @@ import { getProfileUsers } from '../../redux/actions/profileAction';
 
 const Info = () => {
   const { id } = useParams();
-  const { auth } = useSelector(state => state);
+  const { auth, profile } = useSelector(state => state);
   const dispatch = useDispatch();
-  
+
+  // Initialize user as null
   const [user, setUserData] = useState(null);
 
   useEffect(() => {
     if (id === auth.user._id) {
       setUserData(auth.user);
+    } else {
+      // This will fetch the data and update the Redux state
+      dispatch(getProfileUsers({ users: profile.users, id, auth }));
     }
-  }, [id, auth.user]);
+  }, [id, auth, dispatch]);
+
+  useEffect(() => {
+    // Now we react to changes in profile.users, which is updated by the Redux store
+    if (id !== auth.user._id) {
+      const userProfile = profile.users.find(user => user._id === id);
+      if (userProfile) {
+        setUserData(userProfile);
+      } else {
+        // You may want to set user to null or a "not found" state here
+        setUserData(null);
+      }
+    }
+  }, [profile.users, id, auth.user._id]);
+
+
+  const isCurrentUserProfile = auth.user && user && auth.user._id === user._id;
 
   return (
     <div className="info bg-white shadow-lg rounded-lg p-4">
@@ -25,7 +45,11 @@ const Info = () => {
           <div className="info_content mt-4">
             <div className="info_content_title flex flex-col items-center">
               <h2 className="text-2xl font-semibold">{user.username}</h2>
-              <button className="btn btn-outline-info mt-2 px-4 py-2 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200 ease-in-out">Edit Profile</button>
+              {isCurrentUserProfile && (
+            <button className="btn btn-outline-info mt-2 px-4 py-2 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200 ease-in-out">
+              Edit Profile
+            </button>
+          )}
             </div>
           </div>
           <div className="flex justify-around w-full mt-4">
