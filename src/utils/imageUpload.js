@@ -23,10 +23,10 @@ export const imageUpload = async (images) => {
             formData.append("file", item)
         }
         
-        formData.append("upload_preset", "efxjficn")
-        formData.append("cloud_name", "devat-channel")
+        formData.append("upload_preset", "y1sj93ns")
+        formData.append("cloud_name", "filsocial")
 
-        const res = await fetch("https://res.cloudinary.com/dphj8lljg/image/upload/v1709812941/97aa847d061a14894178805f1d551500_czqjrt.jpg", {
+        const res = await fetch("https://api.cloudinary.com/v1_1/filsocial/image/upload", {
             method: "POST",
             body: formData
         })

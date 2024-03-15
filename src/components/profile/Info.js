@@ -3,14 +3,17 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Avatar from '../alert/Avatar';
 import { getProfileUsers } from '../../redux/actions/profileAction';
+import EditProfile from './EditProfile';
+import FollowBtn from './FollowBtn';
 
 const Info = () => {
   const { id } = useParams();
   const { auth, profile } = useSelector(state => state);
   const dispatch = useDispatch();
 
-  // Initialize user as null
+ 
   const [user, setUserData] = useState(null);
+  const [onEdit, setOnEdit] = useState(false);
 
   useEffect(() => {
     if (id === auth.user._id) {
@@ -46,10 +49,14 @@ const Info = () => {
             <div className="info_content_title flex flex-col items-center">
               <h2 className="text-2xl font-semibold">{user.username}</h2>
               {isCurrentUserProfile && (
-            <button className="btn btn-outline-info mt-2 px-4 py-2 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200 ease-in-out">
+            <button onClick={() => setOnEdit(!onEdit)} className="btn btn-outline-info mt-2 px-4 py-2 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200 ease-in-out">
               Edit Profile
             </button>
+
+            
           )}
+
+             {!isCurrentUserProfile && <FollowBtn />}
             </div>
           </div>
           <div className="flex justify-around w-full mt-4">
@@ -65,8 +72,12 @@ const Info = () => {
             <h6 className="text-sm text-gray-500">{user.role}</h6>
             <h6 className="text-sm text-gray-500">{user.group}</h6>
             <h6 className="text-sm text-gray-500">{user.email}</h6>
+            <h6 className="text-sm text-gray-500">{user.story}</h6>
             <a href={user.website} className="text-sm text-blue-500">{user.website}</a>
           </div>
+
+          {onEdit && <EditProfile user={user} setOnEdit={setOnEdit}/>
+}
         </div>
       )}
     </div>

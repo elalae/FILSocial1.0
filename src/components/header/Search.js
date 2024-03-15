@@ -41,7 +41,8 @@ const Search = () => {
                 name="search"
                 value={search}
                 id="search"
-                placeholder="Search"
+                placeholder="Enter to Search"
+                title="Enter to Search"
                 onChange={e => setSearch(e.target.value.toLowerCase().replace(/ /g, ''))}
                 className="w-full rounded-full py-2 px-14 text-sm focus:outline-none"
                 onSubmit={handleClose}
