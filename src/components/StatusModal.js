@@ -90,65 +90,84 @@ const handleSubmit = e => {
 }
 
   return (
-    <div className="status_modal">
-      <form onSubmit={handleSubmit}>
-        <div className="status_header">
-            <h5 className="m-0">
-                 Create Post
-            </h5>
-            <span onClcik={() => dispatch({type: GLOBALTYPES.STATUS, payload: false })}>$times;</span>
-        </div>
-
-        <div className="status_body">
-        <textarea name="content" value={content} placeholder={`${auth.user.username} what are you thinking?`} 
-        onChange={e => setContent(e.target.value)}/>
-
-        <div className="show_images">
-          {images.map((img, index) => (
-            <div key={index} id="file_img" >
-                <img  src={img.camera ? img.camera : URL.createObjectURL(img)}
-                alt="images" className = "img-thumbnail rounded"
-                style={{filter: theme ? 'invert(1)' : 'invert(0)' }} />
-                <span onClick={() => deleteImages(index)}>&times;</span>
-              </div>
-          ))}
-          </div>
-
-          {
-            stream && 
-            <div className="stream">
-            <video autoPlay muted ref={videoRef}
-             style={{filter: theme ? 'invert(1)' : 'invert(0)' }} />
-
-             <span onClick={handleStopStream}>&times;</span>
-             <canvas ref={refCanvas} style={{display: 'none'}}/>
-            </div>
-          }
-        
-      <div className="input_images">
-        {
-          stream
-          ? <i className="fas fa-camera" onClick={handleCapture}/>
-          : <>
-           <i className="fas fa-camera" onClick={handleStream}/>
-           <div className="file_upload">
-            <i className="fas fa-image" />
-            <input type="file" name="file" id="file"
-            multiple accept="image/*" 
-            onChange={handleChangeImages}/>
-           </div>
-            </>
-        }
-          
+<div className="fixed inset-0 z-50 overflow-y-auto">
+  <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center min-h-screen">
+    <div className="bg-white rounded-lg w-full max-w-md mx-auto border border-gray-200 shadow-lg">
+      <div className="flex justify-between items-center border-b border-gray-200 p-5">
+        <h5 className="text-lg font-medium">
+          Create Post
+        </h5>
+        <button type="button" onClick={() => dispatch({type: GLOBALTYPES.STATUS, payload: false })} className="text-2xl font-semibold">
+          &times;
+        </button>
       </div>
+
+      <div className="p-5">
+        <textarea 
+          name="content" 
+          value={content} 
+          placeholder={`${auth.user.username} what are you thinking?`} 
+          onChange={e => setContent(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg p-2"
+        />
+
+        <div className="flex flex-wrap -m-1">
+          {images.map((img, index) => (
+            <div key={index} className="p-1">
+              <div className="relative">
+                <img  
+                  src={img.camera ? img.camera : URL.createObjectURL(img)}
+                  alt="images" 
+                  className="rounded-lg max-w-full h-auto align-middle border-none"
+                  style={{filter: theme ? 'invert(1)' : 'invert(0)' }}
+                />
+                <button type="button" onClick={() => deleteImages(index)} className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1">&times;</button>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="status_footer">
-          <button type="submit" >Post </button>
+
+        {stream && 
+          <div className="relative mt-4">
+            <video autoPlay muted ref={videoRef} className="w-full rounded-lg" style={{filter: theme ? 'invert(1)' : 'invert(0)' }}/>
+            <button type="button" onClick={handleStopStream} className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1">&times;</button>
+            <canvas ref={refCanvas} className="hidden"/>
           </div>
+        }
 
-      </form>
+        <div className="flex items-center gap-4 mt-4">
+          {stream ? (
+            <button type="button" className="text-xl" onClick={handleCapture}>
+              <i className="fas fa-camera"></i>
+            </button>
+          ) : (
+            <>
+              <button type="button" className="text-xl" onClick={handleStream}>
+                <i className="fas fa-camera"></i>
+              </button>
+              <div className="relative">
+                <i className="fas fa-image text-xl"></i>
+                <input 
+                  type="file" 
+                  name="file" 
+                  id="file"
+                  multiple 
+                  accept="image/*" 
+                  onChange={handleChangeImages}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
 
+      <div className="flex justify-end items-center p-5 border-t border-gray-200">
+        <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Post</button>
+      </div>
     </div>
+  </form>
+</div>
   )
 }
 

@@ -11,6 +11,8 @@ const Avatar = ({ src, size }) => {
         sizeClass = 'w-15 h-15'; 
     } else if (size === 'super_large') {
         sizeClass = 'w-34 h-34';
+    }else if(size ==='profile'){
+        sizeClass = 'w-40 h-40';
     }else {
         sizeClass = 'w-10 h-10'; 
     } 

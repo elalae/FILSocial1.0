@@ -44,7 +44,7 @@ const Info = () => {
     <div className="info bg-white shadow-lg rounded-lg p-4">
       {user && (
         <div className="info_container flex flex-col items-center">
-          <Avatar src={user.avatar} size="super_large" className="w-32 h-32 rounded-full object-cover" />
+          <Avatar src={user.avatar} size="profile" className="w-32 h-32 rounded-full object-cover" />
           <div className="info_content mt-4">
             <div className="info_content_title flex flex-col items-center">
               <h2 className="text-2xl font-semibold">{user.username}</h2>
