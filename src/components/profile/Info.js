@@ -56,7 +56,7 @@ const Info = () => {
             
           )}
 
-             {!isCurrentUserProfile && <FollowBtn />}
+             {!isCurrentUserProfile && <FollowBtn user={user} />} 
             </div>
           </div>
           <div className="flex justify-around w-full mt-4">

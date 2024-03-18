@@ -23,12 +23,13 @@ const profileReducer = (state = initialState, action) => {
         case PROFILE_TYPES.FOLLOW:
             return {
                 ...state,
-                users: EditData(state.users, action.payload._id, action.payload)
+                users: EditData(state.users, action.payload._id, action.payload )
+                
             };
         case PROFILE_TYPES.UNFOLLOW:
             return {
                 ...state,
-                users: EditData(state.users, action.payload._id, action.payload)
+                users: EditData(state.users, action.payload._id, action.payload )
             };
         case PROFILE_TYPES.GET_ID:
             return {

@@ -1,6 +1,7 @@
-import { GLOBALTYPES} from './globalTypes'
+import { GLOBALTYPES, EditData , DeleteData} from './globalTypes'
 import { getDataAPI, patchDataAPI } from '../../utils/fetchData'
 import { imageUpload } from '../../utils/imageUpload'
+
 
 
 
@@ -93,4 +94,42 @@ export const updateProfileUser = ({userData, avatar, auth}) => async (dispatch) 
         dispatch({type: GLOBALTYPES.ALERT, payload: {loading: false}})
     }
 }
+
+export const follow = ({users, user, auth}) => async (dispatch) => {
+    let newUser= {...user, followers:[...user.followers, auth.user]}
+
+    dispatch({type: PROFILE_TYPES.FOLLOW, payload: newUser})
+
+    dispatch({
+        type: GLOBALTYPES.AUTH,
+        payload: {
+            ...auth,
+            user: {...auth.user, following:[...auth.user.following, newUser] }
+        }
+    })
+}
+
+export const unfollow = ({users, user, auth}) => async (dispatch) => {
+    let newUser= {
+        ...user, 
+        followers: DeleteData(user.followers, auth.user._id) 
+    }
+
+   console.log(newUser)
+
+   dispatch({type: PROFILE_TYPES.FOLLOW, payload: newUser})
+   
+   dispatch({
+    type: GLOBALTYPES.AUTH,
+    payload: {
+        ...auth,
+        user: {
+            ...auth.user,
+            following: DeleteData(auth.user.following, newUser._id ) 
+        }
+    }
+})
+   
+}
+
 
