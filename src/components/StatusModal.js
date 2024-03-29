@@ -1,10 +1,10 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { GLOBALTYPES } from '../redux/actions/globalTypes'
-import {createPost} from '../redux/actions/postAction'
+import {createPost, updatePost} from '../redux/actions/postAction'
 
 const StatusModal = () => {
-  const {auth, theme} = useSelector(state => state)
+  const {auth, theme, status} = useSelector(state => state)
   const dispatch = useDispatch()
 
   const [content, setContent] = useState('')
@@ -79,15 +79,28 @@ const handleStopStream = () => {
 
 const handleSubmit = e => {
   e.preventDefault()
-  if(images.length===0)
-  return dispatch({type: GLOBALTYPES.ALERT, payload: {error: "Please add an image."}})
-  dispatch(createPost({content, images, auth}))
+  if(content.length===0)
+  return dispatch({type: GLOBALTYPES.ALERT, payload: {error: "Please add content."}})
+
+  if(status.onEdit){
+    dispatch(updatePost({content, images, auth, status}))
+  }else {
+    dispatch(createPost({content, images, auth}))
+  }
+  
 
   setContent('')
   setImages([])
   if(tracks) tracks.stop()
   dispatch({type: GLOBALTYPES.STATUS, payload: false})
 }
+
+useEffect(() => {
+   if (status.onEdit){
+    setContent(status.content)
+    setImages(status.images)
+   } 
+},[status])
 
   return (
 <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -115,12 +128,16 @@ const handleSubmit = e => {
           {images.map((img, index) => (
             <div key={index} className="p-1">
               <div className="relative">
-                <img  
-                  src={img.camera ? img.camera : URL.createObjectURL(img)}
-                  alt="images" 
-                  className="rounded-lg max-w-full h-auto align-middle border-none"
-                  style={{filter: theme ? 'invert(1)' : 'invert(0)' }}
-                />
+              <img  
+  src={img.camera 
+    ? img.camera 
+    : img.url ? img.url : (img instanceof File ? URL.createObjectURL(img) : undefined)}
+  alt="images" 
+  className="rounded-lg max-w-full h-auto align-middle border-none"
+  style={{filter: theme ? 'invert(1)' : 'invert(0)' }}
+/>
+
+
                 <button type="button" onClick={() => deleteImages(index)} className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1">&times;</button>
               </div>
             </div>

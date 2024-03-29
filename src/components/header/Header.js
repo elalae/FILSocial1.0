@@ -16,7 +16,7 @@ function Header() {
           <div className="flex items-center">
           <Link to="/">
   <a className="mx-2 my-1 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0">
-    <img className="mr-2" src="../../images/logo.png" style={{ height: '20px' }} alt="FILSocial" loading="lazy" />
+    <img className="mr-2" src="../../images/logo.png" style={{ height: '20px' }} alt="FILSocial" loading="lazy" onClick={() => window.scrollTo({top: 0})}/>
   </a>
 </Link>
            <Search />

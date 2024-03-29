@@ -1,10 +1,14 @@
 import { GLOBALTYPES } from './globalTypes'
 import { imageUpload } from '../../utils/imageUpload'
-import {postDataAPI, getDataAPI} from '../../utils/fetchData'
+import {postDataAPI, getDataAPI, patchDataAPI} from '../../utils/fetchData'
 
 export const POST_TYPES = {
     CREATE_POST: 'CREATE_POST',
-
+    LOADING_POST: 'LOADING_POST',
+    GET_POSTS: 'GET_POSTS',
+    UPDATE_POST: 'UPDATE_POST',
+    GET_POST: 'GET_POST',
+    DELETE_POST: 'DELETE_POST'
 }
 
 export const createPost = ({ content, images, auth }) => async dispatch => {
@@ -13,20 +17,99 @@ export const createPost = ({ content, images, auth }) => async dispatch => {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
         if (images.length > 0) media = await imageUpload(images);
 
-        const res = await postDataAPI('posts', { content, images: media }, auth.token);
-        dispatch({ type: POST_TYPES.CREATE_POST, payload: res.data.newPost });
+        const res = await postDataAPI('posts', { content, images: media }, auth.token)
+        dispatch({
+             type: POST_TYPES.CREATE_POST, 
+             payload: {...res.data.newPost, user: auth.user} 
+            });
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
 
     } catch (err) {
-        let errorMsg = "An unexpected error occurred";
-        if (err.response && err.response.data && err.response.data.msg) {
-            errorMsg = err.response.data.msg;
-        } else if (err.message) {
-            errorMsg = err.message; 
-        }
         dispatch({
             type: GLOBALTYPES.ALERT,
-            payload: { error: errorMsg }
+            payload: { error: err.response.data.msg }
+         })
+    }
+}
+
+export const getPosts = (token) => async (dispatch) => {
+    try{
+        dispatch({type: POST_TYPES.LOADING_POST, payload: true})
+        const res = await getDataAPI('posts', token)
+       
+        dispatch({
+            type: POST_TYPES.GET_POSTS,
+            payload: res.data
+        })
+
+        dispatch({type: POST_TYPES.LOADING_POST, payload: false})
+    }catch (err) {
+     
+     dispatch({
+        type: GLOBALTYPES.ALERT,
+        payload: { error: err.response.data.msg }
+     })
+    }
+ }
+
+ export const updatePost = ({ content, images, auth, status }) => async dispatch => {
+    let media = [];
+    try {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+
+        // Only upload new images
+        const imgNewUrl = images.filter(img => !img.url);
+        if (imgNewUrl.length > 0) media = await imageUpload(imgNewUrl);
+
+        const res = await patchDataAPI(`post/${status._id}`, {
+            content,
+            images: [...status.images.filter(img => img.url), ...media]
+        }, auth.token);
+
+        dispatch({
+            type: POST_TYPES.UPDATE_POST,
+            payload: { ...res.data.newPost }
+        });
+
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: 'Post updated successfully' } });
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
         });
     }
 };
+
+export const likePost = ({post, auth}) => async (dispatch) => {
+
+    const newPost = {...post, likes: [...post.likes, auth.user]}
+    
+    dispatch({type: POST_TYPES.UPDATE_POST, payload: newPost})
+
+    try {
+        await patchDataAPI(`post/${post._id}/like`, null, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        });
+    }
+}
+
+export const unLikePost = ({post, auth}) => async (dispatch) => {
+   
+    const newPost = {...post, likes: post.likes.filter(like => like._id !== auth.user._id)}
+  
+
+   dispatch({type: POST_TYPES.UPDATE_POST, payload: newPost})
+
+    try {
+        await patchDataAPI(`post/${post._id}/unlike`, null, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        });
+    }
+
+} 

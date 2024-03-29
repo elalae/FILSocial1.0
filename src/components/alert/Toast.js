@@ -2,14 +2,13 @@ import React from 'react';
 
 const Toast = ({ msg, handleShow, bgColor }) => {
   return (
-    <div className={`toast show fixed text-light ${bgColor}`}
-      style={{ top: '5px', right: '5px', minWidth: '200px', zIndex: 50 }}>
-      <div className={`toast-header ${bgColor}`}>
-        <strong className="mr-auto">{msg.title}</strong>
-        <button className="ml-2 mb-1 close" data-dismiss="toast" style={{ outline: 'none' }}
-          onClick={handleShow}>&times;</button>
+    <div className={`fixed ${bgColor} text-white p-4 rounded-lg shadow-md`}
+         style={{ top: '20px', right: '20px', minWidth: '200px', zIndex: 50 }}>
+      <div className={`flex items-center justify-between ${bgColor}`}>
+        <strong className="flex-grow">{msg.title}</strong>
+        <button className="ml-2 text-lg" onClick={handleShow}>&times;</button>
       </div>
-      <div className="toast-body">
+      <div className="mt-2">
         {msg.body}
       </div>
     </div>

@@ -10,6 +10,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {refreshToken} from './redux/actions/authActions'
 import Header from './components/header/Header';
 import StatusModal from './components/StatusModal';
+import { getPosts } from './redux/actions/postAction';
 function App() {
 
   
@@ -21,6 +22,10 @@ function App() {
     dispatch(refreshToken())
   }, [dispatch])
   
+
+  useEffect(()=>{
+   if(auth.token) dispatch(getPosts(auth.token))
+  },[dispatch, auth.token])
 
 
 
