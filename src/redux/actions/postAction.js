@@ -39,7 +39,7 @@ export const getPosts = (token) => async (dispatch) => {
        
         dispatch({
             type: POST_TYPES.GET_POSTS,
-            payload: res.data
+            payload: {...res.data, page: 2}
         })
 
         dispatch({type: POST_TYPES.LOADING_POST, payload: false})
@@ -57,7 +57,6 @@ export const getPosts = (token) => async (dispatch) => {
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
 
-        // Only upload new images
         const imgNewUrl = images.filter(img => !img.url);
         if (imgNewUrl.length > 0) media = await imageUpload(imgNewUrl);
 
