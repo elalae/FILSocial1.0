@@ -1,14 +1,12 @@
 
 import React, { useState } from 'react'
 import { useSelector, useDispatch} from 'react-redux'
-import CardHeader from './post_card/CardHeader'
-import CardBody from './post_card/CardBody'
-import CardFooter from './post_card/CardFooter'
+
 import LoadIcon from '../../images/loading.gif'
 import LoadMoreBtn from './LoadMoreBtn'
 import { getDataAPI } from '../../utils/fetchData'
 import { POST_TYPES } from '../../redux/actions/postAction'
-
+import PostCard from '../../pages/profile/PostCard'
 
 function Posts() {
   const { homePosts, auth, theme } = useSelector(state => state)
@@ -31,12 +29,7 @@ function Posts() {
     <div>
       {
         homePosts.posts.map(post => (
-          <div key={post._id} className="bg-white shadow-md rounded-lg p-4 my-4">
-            <CardHeader post={post} />
-            <CardBody post={post} />
-            <CardFooter post={post} />
-
-          </div>
+          <PostCard key={post._id} post={post} />
         ))
       }
          {

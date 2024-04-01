@@ -6,6 +6,8 @@ import UserCard from '../UserCard'
 import LoadIcon from '../../images/loading.gif'
 import { Link } from 'react-router-dom'
 
+//TODE: add limit
+
 const Search = () => {
     const [search, setSearch] = useState('')
     const [users, setUsers] = useState([])

@@ -30,7 +30,7 @@ const Info = () => {
   }, [id, auth, dispatch]);
 
   useEffect(() => {
-    // Now we react to changes in profile.users, which is updated by the Redux store
+    
     if (id !== auth.user._id) {
       const userProfile = profile.users.find(user => user._id === id);
       if (userProfile) {
@@ -40,7 +40,7 @@ const Info = () => {
         setUserData(null);
       }
     }
-  }, [profile.users, id, auth.user._id]);
+  }, [profile.users, id, auth.user._id, dispatch]);
 
 
   const isCurrentUserProfile = auth.user && user && auth.user._id === user._id;
