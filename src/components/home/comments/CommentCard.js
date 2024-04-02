@@ -6,9 +6,10 @@ import LikeButton from '../../profile/LikeButton';
 import { useSelector, useDispatch} from 'react-redux';
 import CommentMenu from './CommentMenu';
 import { updateComment, likeComment , unLikeComment} from '../../../redux/actions/commentAction';
+import InputComment from '../InputComment';
 
 
-const CommentCard = ({ comment, post }) => {
+const CommentCard = ({ children, comment, post, commentId }) => {
   const { auth } = useSelector(state => state);
 
   const [content, setContent] = useState('');
@@ -18,6 +19,8 @@ const CommentCard = ({ comment, post }) => {
   const [isLike, setIsLike] = useState(false);
   const [onEdit, setOnEdit] = useState(false);
   const [loadLike, setLoadLike] = useState(false);
+
+  const [onReply, setOnReply] = useState(false);
 
 
   const handleUpdate = () => {
@@ -53,6 +56,11 @@ const CommentCard = ({ comment, post }) => {
     setLoadLike(false);
   }
 
+  const handleReply = () => {
+    if(onReply) return setOnReply(false)
+    setOnReply({...comment, commentId})
+  }
+
   const styleCard = `opacity-${comment.user._id === post.user._id ? '100' : '60'} pointer-events-${comment._id ? 'auto' : 'none'}`;
 
   return (
@@ -63,11 +71,30 @@ const CommentCard = ({ comment, post }) => {
   </Link>
 
   <div className="comment_content mt-2 " >
+
+    {
+       onReply && 
+       <InputComment post={post} onReply={onReply} setOnReply={setOnReply}>
+        <Link to={`/profile/${onReply.user._id}`}>
+          @{onReply.user.username} 
+        </Link>
+        </InputComment>
+    }
+
+    {children}
   {
       onEdit 
       ? <textarea rows="5" value={content}
       onChange={e => setContent(e.target.value)} />
       :  <p className="text-gray-700">
+
+        {
+          comment.tag && comment.tag._id !== comment.user._id && 
+            <Link to = {`/profile/${comment.tag._id}`} className="mr-1 hover:underline">
+              @{comment.tag.username}
+            </Link>
+          
+        }
  
       {content.length < 100 ? content : readMore ? content : content.slice(0, 100) + '...'}
       {content.length > 100 && (
@@ -99,7 +126,7 @@ const CommentCard = ({ comment, post }) => {
           <span className="mx-2">•</span><span className="cursor-pointer text-gray-500 hover:text-gray-600" onClick={() => setOnEdit(false)}>cancel</span>
           </>
           
-          :<><span className="mx-2">•</span><span className="cursor-pointer text-gray-500 hover:text-gray-600">reply</span></>
+          :<><span className="mx-2">•</span><span className="cursor-pointer text-gray-500 hover:text-gray-600" onClick={handleReply}>{onReply ? 'cancel' : 'reply'}</span></>
         }
   
     
