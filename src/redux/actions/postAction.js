@@ -1,6 +1,6 @@
 import { GLOBALTYPES } from './globalTypes'
 import { imageUpload } from '../../utils/imageUpload'
-import {postDataAPI, getDataAPI, patchDataAPI} from '../../utils/fetchData'
+import {postDataAPI, getDataAPI, patchDataAPI, deleteDataAPI} from '../../utils/fetchData'
 
 export const POST_TYPES = {
     CREATE_POST: 'CREATE_POST',
@@ -112,3 +112,29 @@ export const unLikePost = ({post, auth}) => async (dispatch) => {
     }
 
 } 
+
+export const getPost = ({ id, auth }) => async (dispatch) => {
+    try {
+        const res = await getDataAPI(`post/${id}`, auth.token)
+        dispatch({ type: POST_TYPES.GET_POST, payload: res.data.post })
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        })
+    }
+}
+
+export const deletePost = ({post, auth}) => async (dispatch) => {
+  
+    dispatch({type: POST_TYPES.DELETE_POST, payload: post})
+    try {
+        deleteDataAPI(`post/${post._id}`, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        })
+    }
+}
+

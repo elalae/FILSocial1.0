@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteComment } from '../../../redux/actions/commentAction';
 
-const CommentMenu = ({ post, comment, auth, setOnEdit }) => {
+const CommentMenu = ({ post, comment, setOnEdit }) => {
   const [showMenu, setShowMenu] = useState(false);
+ const {auth} = useSelector(state => state)
+  const dispatch = useDispatch()
+
+  const handleRemove = () => {
+    dispatch(deleteComment({ post, auth, comment }));
+  }
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -14,7 +22,7 @@ const CommentMenu = ({ post, comment, auth, setOnEdit }) => {
           <span className="material-icons">create</span>
           <span>Edit</span>
         </div>
-        <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer">
+        <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer" onClick={handleRemove}>
           <span className="material-icons">delete_outline</span>
           <span>Remove</span>
         </div>
@@ -35,8 +43,8 @@ const CommentMenu = ({ post, comment, auth, setOnEdit }) => {
               post.user._id === auth.user._id
               ? comment.user._id === auth.user._id 
                 ? <MenuItem />
-                : <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer"> 
-                    <span className="material-icons">delete_outline</span> 
+                : <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer" onClick={handleRemove}> 
+                    <span className="material-icons" >delete_outline</span> 
                     <span>Remove</span>          
                   </div>
                 : comment.user._id === auth.user._id && <MenuItem />

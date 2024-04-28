@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import Avatar from '../../alert/Avatar';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { GLOBALTYPES } from '../../../redux/actions/globalTypes';
+import { deletePost } from '../../../redux/actions/postAction';
+import { BASE_URL } from '../../../utils/config';
 
 const CardHeader = ({ post }) => {
   const { auth } = useSelector(state => state);
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const History = useHistory();
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
@@ -18,6 +22,17 @@ const CardHeader = ({ post }) => {
         payload: { ...post, onEdit: true }
     });
 };
+
+const handleDeletePost =  () => {
+  if (window.confirm('Are you sure you want to delete this post?')) {
+  dispatch(deletePost({post, auth}))
+  return History.push("/")
+  }
+}
+
+const handleCopyLink = () => {
+  navigator.clipboard.writeText(`${BASE_URL}/post/${post._id}`)
+}
 
 
  
@@ -47,12 +62,12 @@ const CardHeader = ({ post }) => {
                   <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={handleEditPost}>
                     <span className="material-icons mr-3">create</span> Edit Post
                   </button>
-                  <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={handleDeletePost}>
                     <span className="material-icons mr-3">delete_outline</span> Remove Post
                   </button>
                 </>
               )}
-              <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={handleCopyLink}>
                 <span className="material-icons mr-3">content_copy</span> Get Link
               </button>
             </div>
