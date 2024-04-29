@@ -11,7 +11,7 @@ export const POST_TYPES = {
     DELETE_POST: 'DELETE_POST'
 }
 
-export const createPost = ({ content, images, auth }) => async dispatch => {
+export const createPost = ({ content, images, auth, socket}) => async dispatch => {
     let media = [];
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
@@ -79,11 +79,11 @@ export const getPosts = (token) => async (dispatch) => {
     }
 };
 
-export const likePost = ({post, auth}) => async (dispatch) => {
-
+export const likePost = ({post, auth, socket}) => async (dispatch) => {
     const newPost = {...post, likes: [...post.likes, auth.user]}
-    
-    dispatch({type: POST_TYPES.UPDATE_POST, payload: newPost})
+    dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost})
+
+    socket.emit('likePost', newPost)
 
     try {
         await patchDataAPI(`post/${post._id}/like`, null, auth.token)
@@ -95,12 +95,11 @@ export const likePost = ({post, auth}) => async (dispatch) => {
     }
 }
 
-export const unLikePost = ({post, auth}) => async (dispatch) => {
-   
+export const unLikePost = ({post, auth, socket}) => async (dispatch) => {
     const newPost = {...post, likes: post.likes.filter(like => like._id !== auth.user._id)}
-  
+    dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost})
 
-   dispatch({type: POST_TYPES.UPDATE_POST, payload: newPost})
+    socket.emit('unLikePost', newPost)
 
     try {
         await patchDataAPI(`post/${post._id}/unlike`, null, auth.token)
@@ -125,11 +124,11 @@ export const getPost = ({ id, auth }) => async (dispatch) => {
     }
 }
 
-export const deletePost = ({post, auth}) => async (dispatch) => {
-  
-    dispatch({type: POST_TYPES.DELETE_POST, payload: post})
+export const deletePost = ({post, auth, socket}) => async (dispatch) => {
+    dispatch({ type: POST_TYPES.DELETE_POST, payload: post })
+
     try {
-        deleteDataAPI(`post/${post._id}`, auth.token)
+        const res = await deleteDataAPI(`post/${post._id}`, auth.token)
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,
@@ -138,3 +137,30 @@ export const deletePost = ({post, auth}) => async (dispatch) => {
     }
 }
 
+export const savePost = ({post, auth}) => async (dispatch) => {
+    const newUser = {...auth.user, saved: [...auth.user.saved, post._id]}
+    dispatch({  type: GLOBALTYPES.AUTH, payload: {...auth, user: newUser}})
+
+    try {
+        await patchDataAPI(`savePost/${post._id}`, null, auth.token)  
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        })
+    }
+}
+
+export const unSavePost = ({post, auth}) => async (dispatch) => {
+    const newUser = {...auth.user, saved: auth.user.saved.filter(id => id !== post._id) }
+    dispatch({ type: GLOBALTYPES.AUTH, payload: {...auth, user: newUser}})
+
+    try {
+        await patchDataAPI(`unSavePost/${post._id}`, null, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: {error: err.response.data.msg}
+        })
+    }
+}

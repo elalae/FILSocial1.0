@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { deleteComment } from '../../../redux/actions/commentAction';
 
 const CommentMenu = ({ post, comment, setOnEdit }) => {
+
   const [showMenu, setShowMenu] = useState(false);
- const {auth} = useSelector(state => state)
+ const {auth, socket} = useSelector(state => state)
   const dispatch = useDispatch()
 
   const handleRemove = () => {
-    dispatch(deleteComment({ post, auth, comment }));
+    dispatch(deleteComment({ post, auth, comment, socket}));
   }
 
   const toggleMenu = () => {
