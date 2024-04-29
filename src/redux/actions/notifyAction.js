@@ -13,6 +13,7 @@ export const NOTIFY_TYPES = {
 export const createNotify = ({msg, auth, socket}) => async (dispatch) => {
     try {
         const res = await postDataAPI('notify', msg, auth.token)
+        console.log(res)
 
         socket.emit('createNotify', {
             ...res.data.notify,
@@ -28,13 +29,19 @@ export const createNotify = ({msg, auth, socket}) => async (dispatch) => {
 
 export const removeNotify = ({msg, auth, socket}) => async (dispatch) => {
     try {
-        await deleteDataAPI(`notify/${msg.id}?url=${msg.url}`, auth.token)
-        
-        socket.emit('removeNotify', msg)
+        await deleteDataAPI(`notify/${msg.id}?url=${msg.url}`, auth.token);
+        if (socket) {
+            socket.emit('removeNotify', msg);
+        } else {
+            console.log('Socket is not defined');
+        }
     } catch (err) {
-        dispatch({type: GLOBALTYPES.ALERT, payload: {error: err.response.data.msg}})
+        const errorMsg = err.response?.data?.msg || err.message || 'An error occurred';
+        dispatch({type: GLOBALTYPES.ALERT, payload: {error: errorMsg}});
     }
 }
+
+
 
 export const getNotifies = (token) => async (dispatch) => {
     try {
