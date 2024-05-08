@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import Avatar from '../alert/Avatar';
-import { getProfileUsers } from '../../redux/actions/profileAction';
 import EditProfile from './EditProfile';
 import FollowBtn from './FollowBtn';
 import Followers from './Followers';
@@ -21,9 +20,10 @@ const Info = ({id, auth, profile, dispatch}) => {
       setUserData(auth.user);
     } else {
      
-      dispatch(getProfileUsers({ users: profile.users, id, auth }));
+      const newData = profile.users.filter(user => user._id === id)
+      setUserData(newData)
     }
-  }, [id, auth, dispatch]);
+  }, [id, auth, dispatch, profile.users])
 
   useEffect(() => {
     

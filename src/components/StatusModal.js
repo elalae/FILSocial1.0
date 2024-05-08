@@ -2,10 +2,14 @@ import React, {useState, useRef, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { GLOBALTYPES } from '../redux/actions/globalTypes'
 import {createPost, updatePost} from '../redux/actions/postAction'
+import { generateImage } from '../utils/fetchData';
 
 const StatusModal = () => {
   const {auth, theme, status, socket} = useSelector(state => state)
   const dispatch = useDispatch()
+
+
+
 
   const [content, setContent] = useState('')
   const [images, setImages] = useState([])
@@ -13,6 +17,28 @@ const StatusModal = () => {
   const videoRef = useRef()
   const refCanvas = useRef()
   const [tracks, setTracks] = useState('')
+  const [generatedImageUrl, setGeneratedImageUrl] = useState('');
+
+  const handleGenerateImage = async () => {
+    console.log(process.env.REACT_APP_OPENAI_API_KEY); // Ensure the API key is loaded
+    if (!content.trim()) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: "Content is empty. Please enter some text to generate an image." } });
+        return;
+    }
+
+    try {
+        const imageData = await generateImage(content);
+        if (imageData && imageData.images && imageData.images.length > 0) {
+            const newImageUrl = imageData.images[0].url;
+            setGeneratedImageUrl(newImageUrl); // Store the URL in state
+            setImages([...images, { url: newImageUrl }]); // Add the generated image URL to the images array
+        }
+    } catch (error) {
+        console.error('Failed to generate image:', error);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: "Failed to generate image. Please try again." } });
+    }
+};
+
 
   const handleChangeImages = e => {
     const files = [...e.target.files]
@@ -180,6 +206,10 @@ useEffect(() => {
       </div>
 
       <div className="flex justify-end items-center p-5 border-t border-gray-200">
+      <button onClick={handleGenerateImage} className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Generate A.I. Image</button>
+
+
+
         <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Post</button>
       </div>
     </div>

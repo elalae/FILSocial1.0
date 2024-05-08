@@ -34,3 +34,27 @@ export const deleteDataAPI = async (url, token) => {
     })
     return res;
 }
+
+export const generateImage = async (prompt) => {
+    try {
+   
+        console.log("API Key for request:", process.env.REACT_APP_OPENAI_API_KEY);
+
+        const headers = {
+            Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+        };
+
+        const data = {
+            prompt: prompt,
+            n: 1,
+            size: "1024x1024"
+        };
+
+        const response = await axios.post('https://api.openai.com/v1/images/generations', data, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to generate image:', error.response ? error.response.data : error);
+        throw error;
+    }
+}
+
