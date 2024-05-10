@@ -1,10 +1,10 @@
-//UserCard.js
 import React from "react";
 import Avatar from "./alert/Avatar";
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
-const UserCard = ({ children, user, border, handleClose, setShowFollowers, setShowFollowing }) => {
+
+const UserCard = ({ children, user, handleClose, setShowFollowers, setShowFollowing, msg }) => {
     const avatarSize = 'small';
     const { theme } = useSelector(state => state);
 
@@ -15,12 +15,26 @@ const UserCard = ({ children, user, border, handleClose, setShowFollowers, setSh
     }
 
     return (
-        <div className={`flex justify-between items-center bg-white rounded-lg shadow p-3 ${border ? 'border border-gray-300' : ''}`}>
+        <div className="flex justify-between items-center bg-white rounded-lg shadow p-3">
             <Link to={`/profile/${user._id}`} onClick={handleCloseAll} className="flex items-center">
                 <Avatar src={user.avatar} size={avatarSize} className="rounded-full" />
                 <div className="ml-4">
                     <span className="block font-medium text-gray-700 hover:text-blue-500">{user.username}</span>
-                    <small className="text-gray-500 hover:text-orange-500">{user.fullname}</small>
+                  
+                    <small className="text-gray-500 hover:text-orange-500">
+                    {
+                        user.text || user.media
+                        ? <>
+                        <div>{user.text}</div>
+                        {user.media.length > 0 && 
+                        <div>
+                            {user.media.length} <i className="fas fa-image"/>
+                            </div>}
+                        </>
+                        : user.fullname
+                    }
+                        
+                        </small>
                 </div>
             </Link>
             
