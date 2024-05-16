@@ -5,12 +5,12 @@ import modal from './modalReducer'
 import profile from './profileReducer'
 import status from './statusReducer'
 import homePosts from './postReducer'
+
 import detailPost from './detailPostReducer'
 import discover from './discoverReducer'
 import suggestions from './suggestionsReducer'
 import socket  from './socketReducer'
 import notify from './notifyReducer'
-import message from './messageReducer'
 
 export default combineReducers({
     auth,
@@ -23,6 +23,5 @@ export default combineReducers({
     discover,
     suggestions,
     socket,
-    notify,
-    message
+    notify
 })

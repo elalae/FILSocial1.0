@@ -20,7 +20,7 @@ const StatusModal = () => {
   const [generatedImageUrl, setGeneratedImageUrl] = useState('');
 
   const handleGenerateImage = async () => {
-    console.log(process.env.REACT_APP_OPENAI_API_KEY); // API key 
+    console.log(process.env.REACT_APP_OPENAI_API_KEY); // Ensure the API key is loaded
     if (!content.trim()) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: "Content is empty. Please enter some text to generate an image." } });
         return;
@@ -30,8 +30,8 @@ const StatusModal = () => {
         const imageData = await generateImage(content);
         if (imageData && imageData.images && imageData.images.length > 0) {
             const newImageUrl = imageData.images[0].url;
-            setGeneratedImageUrl(newImageUrl); 
-            setImages([...images, { url: newImageUrl }]); 
+            setGeneratedImageUrl(newImageUrl); // Store the URL in state
+            setImages([...images, { url: newImageUrl }]); // Add the generated image URL to the images array
         }
     } catch (error) {
         console.error('Failed to generate image:', error);
