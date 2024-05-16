@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { POST_TYPES } from './redux/actions/postAction';
 import { GLOBALTYPES } from './redux/actions/globalTypes';
 import { NOTIFY_TYPES } from './redux/actions/notifyAction'
-import { MESS_TYPES } from './redux/actions/messageAction'
-import { addMessage } from './redux/actions/messageAction';
+
 
 
 
@@ -117,23 +116,6 @@ const SocketClient = () => {
         return () => socket.off('removeNotifyToClient')
     },[socket, dispatch])
 
-     // Message
-     useEffect(() => {
-        socket.on('addMessageToClient', msg =>{
-            dispatch({type: MESS_TYPES.ADD_MESSAGE, payload: msg})
-
-            dispatch({
-                type: MESS_TYPES.ADD_USER, 
-                payload: {
-                    ...msg.user, 
-                    text: msg.text, 
-                    media: msg.media
-                }
-            })
-        })
-
-        return () => socket.off('addMessageToClient')
-    },[socket, dispatch])
 
     
     return null; 
