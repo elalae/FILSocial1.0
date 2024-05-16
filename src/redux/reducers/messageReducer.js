@@ -22,14 +22,15 @@ const messageReducer = (state = initialState, action) => {
             return {
                 ...state,
                data: [...state.data, action.payload],
-               users: state.users.map(user =>
-                user._id === action.payload.recipient || user._id === action.payload.sender
-                ? {...user, text: action.payload.text, media: action.payload.media}
-                : user
-               )
-        
+              // users: state.users.map(user => 
+                // user._id === action.payload.recipient || user._id === action.payload.sender
+                // ? {...user, text: action.payload.text, media: action.payload.media}
+                //: user
+           //    )
+              users: [...state.users]
             };
         case MESS_TYPES.GET_CONVERSATIONS:
+            console.log(action)
             return {
                 ...state,
                 users: action.payload.newArr,
@@ -39,7 +40,8 @@ const messageReducer = (state = initialState, action) => {
         case MESS_TYPES.GET_MESSAGES:
             return {
                 ...state,
-                data: [...state.data, action.payload]
+                data: action.payload.messages.reverse(),
+                resultData: action.payload.result
             };
         case MESS_TYPES.UPDATE_MESSAGES:
             return {

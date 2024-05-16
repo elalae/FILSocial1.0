@@ -7,8 +7,9 @@ import { GLOBALTYPES } from '../../redux/actions/globalTypes'
 import {imageShow, videoShow} from '../../utils/mediaShow'
 import { imageUpload } from '../../utils/imageUpload'
 import Icons from './Icons'
-import { addMessage } from '../../redux/actions/messageAction'
+import { addMessage, getMessages } from '../../redux/actions/messageAction'
 import LoadIcon from '../../images/loading.gif'
+
 const RightSide = () => {
     const { auth, message, socket } = useSelector(state => state)
     const { id } = useParams()
@@ -23,7 +24,7 @@ const RightSide = () => {
      if(newUser){
         setUser(newUser)
      }
-    },[message.users])
+    },[message.users, id])
 
     const handleChangeMedia = (e) => {
         const files = [...e.target.files]
@@ -73,6 +74,15 @@ const RightSide = () => {
         setLoadMedia(false)
         dispatch(addMessage({msg, auth, socket}))
     }
+
+    useEffect(() => {
+        if(id){
+            const getMessagesData = async () => {
+                await dispatch(getMessages({auth, id}))
+            }
+            getMessagesData()
+        }
+    },[id, dispatch, auth])
 
     return (
         <div className="flex flex-col h-full relative">

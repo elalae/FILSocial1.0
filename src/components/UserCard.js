@@ -23,7 +23,7 @@ const UserCard = ({ children, user, handleClose, setShowFollowers, setShowFollow
                   
                     <small className="text-gray-500 hover:text-orange-500">
                     {
-                        user.text || user.media
+                        msg
                         ? <>
                         <div>{user.text}</div>
                         {user.media.length > 0 && 

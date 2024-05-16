@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import UserCard from '../UserCard'
 import { useSelector, useDispatch } from 'react-redux'
 import { getDataAPI } from '../../utils/fetchData'
 import { GLOBALTYPES } from '../../redux/actions/globalTypes'
 import { useHistory, useParams } from 'react-router-dom'
-import { addUser } from '../../redux/actions/messageAction'
+import { addUser, getConversations } from '../../redux/actions/messageAction'
+
 
 const LeftSide = () => {
-    const { auth, message } = useSelector(state => state)
+    const { auth, message } = useSelector(state => state);
     const dispatch = useDispatch()
     const [search, setSearch] = useState('')
     const [searchUsers, setSearchUsers] = useState([])
@@ -39,6 +40,13 @@ const LeftSide = () => {
     const isActive = (user) => {
         return id === user._id ? 'bg-blue-100' : 'bg-white'
     }
+
+    useEffect(() => {
+        if (message.firstLoad) return; 
+        dispatch(getConversations(auth)); 
+    }, [dispatch, auth, message.firstLoad]);
+
+
 
     return (
         <div className="flex flex-col h-full overflow-auto">

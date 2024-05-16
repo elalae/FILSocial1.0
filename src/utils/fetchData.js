@@ -34,7 +34,6 @@ export const deleteDataAPI = async (url, token) => {
     })
     return res;
 }
-
 export const generateImage = async (prompt) => {
     try {
    
