@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { POST_TYPES } from './redux/actions/postAction';
 import { GLOBALTYPES } from './redux/actions/globalTypes';
-import { NOTIFY_TYPES } from './redux/actions/notifyAction'
+import { NOTIFY_TYPES } from './redux/actions/notifyAction';
+import { MESS_TYPES } from './redux/actions/messageAction';
+
 
 
 
@@ -117,7 +119,15 @@ const SocketClient = () => {
     },[socket, dispatch])
 
 
-    
+    //Message
+    useEffect(() => {
+        socket.on('addMessageToClient', msg =>{
+            dispatch({type: MESS_TYPES.ADD_MESSAGE, payload: msg})
+        })
+
+        return () => socket.off('addMessageToClient')
+    },[socket, dispatch])
+
     return null; 
 
     

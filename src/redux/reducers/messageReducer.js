@@ -32,12 +32,15 @@ const messageReducer = (state = initialState, action) => {
                         resultUsers: action.payload.result,
                         firstLoad: true
                     };
-                case MESS_TYPES.GET_MESSAGES:
-                    return {
-                        ...state,
-                        data: action.payload.messages.reverse(),
-                        resultData: action.payload.result
-                    };                        
+                    case MESS_TYPES.GET_MESSAGES:
+                        return {
+                            ...state,
+                            data: action.payload.page === 1 
+                                  ? action.payload.messages.reverse()
+                                  : [...action.payload.messages.reverse(), ...state.data],
+                            resultData: action.payload.result
+                        };
+                                     
           default:
             return state;
     }

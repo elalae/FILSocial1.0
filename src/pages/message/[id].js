@@ -4,13 +4,12 @@ import RightSide from '../../components/message/RightSide';
 
 const Conversation = () => {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <div className="w-1/4 bg-gray-100 p-4 shadow-lg">
+    <div className="flex h-screen">
+      <div className="w-1/4 bg-gray-200 border-r border-gray-300 p-4 overflow-y-auto">
         <LeftSide />
       </div>
-      <div className="w-3/4 flex justify-center items-center bg-white p-6">
-       <RightSide />
-
+      <div className="w-3/4 flex flex-col bg-white p-6 overflow-y-auto">
+        <RightSide />
       </div>
     </div>
   );
