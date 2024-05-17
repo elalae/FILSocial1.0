@@ -58,7 +58,7 @@ const LeftSide = () => {
                 searchUsers.map(user => (
                     <div key={user._id} className="message_user"
                     onClick={()=> handleAddUser(user)}>
-                    <UserCard user={user}>
+                    <UserCard user={user} >
                        <i className="fas fa-circle active" />
                      </UserCard >
                     </div>
@@ -71,7 +71,7 @@ const LeftSide = () => {
                 message.users.map(user => (
                     <div key={user._id} className="message_user"
                     onClick={()=> handleAddUser(user)}>
-                    <UserCard user={user}/>    
+                    <UserCard user={user} msg={true}/>    
                     </div>
                 ))
             }

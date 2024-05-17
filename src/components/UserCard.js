@@ -3,7 +3,7 @@ import Avatar from "./alert/Avatar";
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
-const UserCard = ({ children, user, border, handleClose, setShowFollowers, setShowFollowing }) => {
+const UserCard = ({ children, user, border, handleClose, setShowFollowers, setShowFollowing, msg }) => {
     const avatarSize = 'small';
     const { theme } = useSelector(state => state);
 
@@ -19,7 +19,20 @@ const UserCard = ({ children, user, border, handleClose, setShowFollowers, setSh
                 <Avatar src={user.avatar} size={avatarSize} className="rounded-full" />
                 <div className="ml-4">
                     <span className="block font-medium text-gray-700 hover:text-blue-500">{user.username}</span>
+                    
                     <small className="text-gray-500 hover:text-orange-500">{user.fullname}</small>
+                    {
+                        msg
+                        ? <>
+                        <div>{user.text}</div>
+                        {user.media.length > 0 && 
+                        <div>
+                            {user.media.length} <i className="fas fa-image"/>
+                        </div>
+                        }
+                        </>
+                        :user.fullname
+                    }
                 </div>
             </Link>
             
