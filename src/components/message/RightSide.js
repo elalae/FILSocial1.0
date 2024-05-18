@@ -125,85 +125,101 @@ const RightSide = () => {
             refDisplay.current.scrollIntoView({ behavior: "smooth", block: "end" });
         }
     }, [text]);
+return (
+    <>
+        <div className="message_header bg-gray-100 p-4 border-b border-gray-300" style={{ marginBottom: '10px' }}>
+            {user.length !== 0 && (
+                <UserCard user={user}>
+                    <i className="fas fa-trash text-red-500" />
+                </UserCard>
+            )}
+        </div>
 
-    return (
-        <>
-            <div className="message_header">
-                {
-                    user.length !== 0 &&
-                    <UserCard user={user}>
-                        <i className="fas fa-trash text-danger" />
-                    </UserCard>
-                }
-            </div>
-
-            <div className="chat_container" style={{ height: media.length > 0 ? 'calc(100% - 180px)' : 'calc(100% - 120px)' }}>
-                <div className="chat_display" ref={refDisplay}>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" style={{ marginTop: '-25px', opacity: 0 }} ref={pageEnd}>
-                        Load More
-                    </button>
-                    {
-                        message.data.map((msg, index) => (
-                            <div key={index}>
-                                {
-                                    msg.sender !== auth.user._id &&
-                                    <div className="chat_row other_message">
-                                        <MsgDisplay user={user} msg={msg} />
-                                    </div>
-                                }
-
-                                {
-                                    msg.sender === auth.user._id &&
-                                    <div className="chat_row your_message">
-                                        <MsgDisplay user={auth.user} msg={msg} />
-                                    </div>
-                                }
-                            </div>
-                        ))
-                    }
-                    {
-                        loadMedia &&
-                        <div className="chat_row your_message">
-                            <img src={LoadIcon} alt="loading" />
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <div className="show_media" style={{ display: media.length > 0 ? 'grid' : 'none' }}>
-                {
-                    media.map((item, index) => (
-                        <div key={index} id="file_media">
-                            {
-                                item.type.match(/video/i)
-                                    ? videoShow(URL.createObjectURL(item))
-                                    : imageShow(URL.createObjectURL(item))
-                            }
-                            <span onClick={() => handleDeleteMedia(index)}>&times;</span>
-                        </div>
-                    ))
-                }
-            </div>
-
-            <form className="chat_input" onSubmit={handleSubmit}>
-                <input type="text" placeholder="Enter your message..."
-                    value={text} onChange={e => setText(e.target.value)} />
-
-                <Icons setContent={setText} content={text} />
-
-                <div className="file_upload">
-                    <i className="fas fa-image text-danger" />
-                    <input type="file" name="file" id="file"
-                        multiple accept="image/*,video/*" onChange={handleChangeMedia} />
-                </div>
-
-                <button type="submit" className="material-icons"
-                    disabled={(text || media.length > 0) ? false : true}>
-                    near_me
+        <div className="chat_container flex-1 overflow-y-auto" style={{ height: 'calc(100% - 152px)' }}>
+            <div className="chat_display" ref={refDisplay}>
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-2 opacity-0"
+                    style={{ marginTop: '-25px' }}
+                    ref={pageEnd}
+                >
+                    Load More
                 </button>
-            </form>
-        </>
-   );
+                {message.data.map((msg, index) => (
+                    <div key={index}>
+                        {msg.sender === auth.user._id ? (
+                            <div className="chat_row your_message p-2 my-2 text-right">
+                                <MsgDisplay user={auth.user} msg={msg} />
+                            </div>
+                        ) : (
+                            <div className="chat_row other_message p-2 my-2 text-left">
+                                <MsgDisplay user={user} msg={msg} />
+                            </div>
+                        )}
+                    </div>
+                ))}
+                {loadMedia && (
+                    <div className="chat_row your_message p-2 my-2 text-right">
+                        <img src={LoadIcon} alt="loading" />
+                    </div>
+                )}
+            </div>
+        </div>
+
+        <div className="show_media grid grid-cols-3 gap-2 p-2" style={{ display: media.length > 0 ? 'grid' : 'none' }}>
+            {media.map((item, index) => (
+                <div key={index} id="file_media" className="relative">
+                    {item.type.match(/video/i) ? videoShow(URL.createObjectURL(item)) : imageShow(URL.createObjectURL(item))}
+                    <span
+                        onClick={() => handleDeleteMedia(index)}
+                        className="absolute top-0 right-0 text-white bg-red-600 rounded-full cursor-pointer"
+                    >
+                        &times;
+                    </span>
+                </div>
+            ))}
+        </div>
+
+        <form className="chat_input bg-white p-4 border-t border-gray-300 flex items-center" style={{ height: '64px' }} onSubmit={handleSubmit}>
+            <input
+                type="text"
+                className="flex-grow p-2 border border-gray-300 rounded-lg"
+                placeholder="Enter your message..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+            />
+
+            <Icons setContent={setText} content={text} />
+
+            <div className="file_upload ml-2">
+                <label htmlFor="file" className="cursor-pointer">
+                    <i className="fas fa-image text-red-500" />
+                </label>
+                <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    multiple
+                    accept="image/*,video/*"
+                    className="hidden"
+                    onChange={handleChangeMedia}
+                />
+            </div>
+
+            <button
+                type="submit"
+                className="material-icons ml-2 p-2 text-blue-500"
+                disabled={text || media.length > 0 ? false : true}
+            >
+                near_me
+            </button>
+        </form>
+    </>
+);
+
+    
+    
+
+    
 };
 
 export default RightSide;

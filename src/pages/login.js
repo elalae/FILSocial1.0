@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {login} from '../redux/actions/authActions'
 import { Link, useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux'
+import FILSocial from '../images/logo.png'
 
 
 const Login = () => {
@@ -33,10 +34,10 @@ const Login = () => {
         
         <div className = "auth_page">
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
           <img
             className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            src={FILSocial} style={{ height: '70px', width: '140px' }}
             alt="Filsocial Logo"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

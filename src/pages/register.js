@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'  
 import {useHistory,Link} from 'react-router-dom'
 import {register } from '../redux/actions/authActions'
+import FILSocial from '../images/logo.png'
 
 const Register = () => {
     const{auth, alert} = useSelector(state => state)
@@ -40,7 +41,7 @@ const Register = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            src={FILSocial} style={{ height: '70px', width: '140px' }}
             alt="Filsocial Logo"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
